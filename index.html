@@ -1,34 +1,79 @@
 
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Завантаження...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Завантаження</title>
     <style>
         body {
-            background-color: #111;
-            color: white;
-            font-family: sans-serif;
-            text-align: center;
-            margin-top: 20%;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+            flex-direction: column;
         }
-        .loader {
-            border: 6px solid #333;
-            border-top: 6px solid #09f;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 1s linear infinite;
-            margin: auto;
+        
+        .timer {
+            font-size: 2rem;
+            margin-bottom: 20px;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        
+        .message {
+            font-size: 1.5rem;
+            color: #333;
+            display: none;
+            margin-top: 20px;
+        }
+
+        .loading {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ff5722;
         }
     </style>
 </head>
 <body>
-    <div class="loader"></div>
-    <p>Завантаження... Будь ласка, зачекайте.</p>
+
+    <div class="timer" id="timer">30</div>
+    <div class="loading">Завантаження...</div>
+    <div class="message" id="message"></div>
+
+    <script>
+        // Масив з випадковими повідомленнями
+        const messages = [
+            "Власник малого члена",
+            "Ти класний! Але якось дивно...",
+            "Не переживай, усе буде добре!",
+            "Хто ти? Я не знаю, але ти крутий!",
+            "Залишайся таким, як є!"
+        ];
+
+        // Оновлюємо таймер кожну секунду
+        let timer = 30;
+        const timerElement = document.getElementById('timer');
+        
+        const countdown = setInterval(() => {
+            timer--;
+            timerElement.textContent = timer;
+            
+            // Коли таймер досягає 0
+            if (timer <= 0) {
+                clearInterval(countdown);  // Зупиняємо таймер
+                
+                // Вибираємо випадкове повідомлення
+                const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+                
+                // Показуємо випадкове повідомлення
+                const messageElement = document.getElementById('message');
+                messageElement.textContent = randomMessage;
+                messageElement.style.display = 'block';  // Показуємо повідомлення
+            }
+        }, 1000);
+    </script>
+
 </body>
 </html>
