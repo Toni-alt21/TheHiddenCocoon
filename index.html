@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Завантаження...</title>
-  <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet" />
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: 'Creepster', cursive;
-      background: linear-gradient(135deg, #000000, #1a1a1a);
+      background: black;
       color: #ff0000;
       display: flex;
       justify-content: center;
@@ -17,6 +21,18 @@
       height: 100vh;
       margin: 0;
       overflow: hidden;
+      position: relative;
+    }
+
+    video.bg {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: -1;
+      opacity: 0.08;
+      filter: blur(5px) brightness(0.4);
     }
 
     .timer {
@@ -25,10 +41,20 @@
     }
 
     .loading {
-      font-size: 2rem;
+      font-size: 1.5rem;
       color: #ff5722;
       margin-top: 10px;
       animation: flicker 1.5s infinite;
+    }
+
+    .scary-text {
+      font-size: 1.2rem;
+      margin-top: 15px;
+      color: #ff3b3b;
+      font-style: italic;
+      min-height: 1.5em;
+      text-align: center;
+      font-family: monospace, monospace;
     }
 
     .message {
@@ -59,15 +85,48 @@
       80% { transform: translate(1px, -1px); }
       100% { transform: translate(0); }
     }
+
+    .scan-line {
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      background: red;
+      animation: scan 3s infinite;
+      opacity: 0.4;
+    }
+
+    @keyframes scan {
+      0% { top: 0; }
+      100% { top: 100%; }
+    }
   </style>
 </head>
 <body>
 
+  <video class="bg" autoplay muted loop>
+    <source src="https://cdn.pixabay.com/vimeo/693834150/darkness-109765.mp4?width=1280&hash=f103c6e25eea248c8b98fae13e0a0a4a52565a6b" type="video/mp4">
+  </video>
+
+  <div class="scan-line"></div>
+
   <div class="timer" id="timer">10</div>
-  <div class="loading">Завантаження темряви...</div>
+  <div class="loading">Завантаження почато...</div>
+  <div class="scary-text" id="scaryText"></div>
   <div class="message" id="message"></div>
 
+  <audio id="scareSound" src="https://cdn.pixabay.com/download/audio/2023/03/30/audio_6497d4d7df.mp3?filename=horror-whisper-145039.mp3"></audio>
+
   <script>
+    const scaryMessages = [
+      "Під'єднуємось до вашого IP...",
+      "Скануємо вашу інформацію...",
+      "Визначаємо місце розташування...",
+      "Отримуємо доступ до камери...",
+      "Аналізуємо активність...",
+      "Невідомі файли в системі...",
+      "Ваш час спливає..."
+    ];
+
     const funnyMessages = [
       "Власник малого пісюна",
       "Ти класний! Але якось дивно... бачити твій маленький пісюн",
@@ -78,19 +137,34 @@
 
     let timer = 10;
     const timerElement = document.getElementById('timer');
+    const scaryTextElement = document.getElementById('scaryText');
     const messageElement = document.getElementById('message');
+    const scareSound = document.getElementById('scareSound');
+
+    let scaryIndex = 0;
+
+    function updateScaryText() {
+      scaryTextElement.textContent = scaryMessages[scaryIndex];
+      scaryIndex = (scaryIndex + 1) % scaryMessages.length;
+    }
+
+    updateScaryText();
+    const scaryInterval = setInterval(updateScaryText, 1500);
 
     const countdown = setInterval(() => {
       timer--;
       timerElement.textContent = timer;
 
+      // коротке блимання екрана
+      document.body.style.backgroundColor = (timer % 2 === 0) ? '#000000' : '#330000';
+
       if (timer <= 0) {
         clearInterval(countdown);
+        clearInterval(scaryInterval);
+        scareSound.play();
 
-        document.body.style.backgroundColor = "#ff0000";
-        setTimeout(() => {
-          document.body.style.backgroundColor = "#000000";
-        }, 100);
+        scaryTextElement.style.display = 'none';
+        document.body.style.backgroundColor = "#000000";
 
         const randomMessage = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
         messageElement.textContent = randomMessage;
@@ -101,4 +175,3 @@
 
 </body>
 </html>
-
