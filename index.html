@@ -135,7 +135,7 @@
       "Залишайся таким, як є — власником маленького пісюна!"
     ];
 
-    let timer = 15;
+    let timer = 20;
     const timerElement = document.getElementById('timer');
     const scaryTextElement = document.getElementById('scaryText');
     const messageElement = document.getElementById('message');
@@ -149,7 +149,7 @@
     }
 
     updateScaryText();
-    const scaryInterval = setInterval(updateScaryText, 1500);
+    const scaryInterval = setInterval(updateScaryText, 3000);
 
     const countdown = setInterval(() => {
       timer--;
